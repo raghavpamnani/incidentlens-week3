@@ -28,7 +28,7 @@ The prepared Python environment and active model cache are in `~/Library/Caches/
 
 ## Pending external actions
 
-The intended repository name is `raghavpamnani/incidentlens-week3`. Public publication requires user approval. No repository was created after automatic approval review rejected that action. The README clone URL is the intended destination for publication, not evidence that it already exists.
+The project was published with explicit owner approval to https://github.com/raghavpamnani/incidentlens-week3. Both `main` and `codex/incidentlens-foundation` preserve the implementation history.
 
 Record the two-minute video using `docs/DEMO_SCRIPT.md`, then submit the public repository and recording through the official bootcamp process. No video or assignment-form submission has been made.
 

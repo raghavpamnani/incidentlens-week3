@@ -28,7 +28,7 @@ Four views make the system inspectable:
 
 ## Quick start
 
-**Local delivery:** public GitHub publication is pending owner approval. In the prepared checkout, run `bash scripts/start_demo.sh`. The clone example below applies after publication.
+**Published repository:** https://github.com/raghavpamnani/incidentlens-week3. In the prepared checkout, run `bash scripts/start_demo.sh`, or clone the repository using the instructions below.
 
 Requires Python 3.12 or 3.13, internet access for initial dependencies/model downloads, and several GB of disk space for the Python environment and model cache. An Apple Silicon Mac or a modern CPU machine can run the demo. The small generator prioritizes accessible local execution over answer quality.
 
