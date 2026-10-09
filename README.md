@@ -28,7 +28,9 @@ Four views make the system inspectable:
 
 ## Quick start
 
-Requires Python 3.12 or 3.13, internet access for initial dependencies/model downloads, and disk space for approximately 3–5 GB of models plus the Python environment. An Apple Silicon Mac or a modern CPU machine can run the demo. The small generator prioritizes accessible local execution over answer quality.
+**Local delivery:** public GitHub publication is pending owner approval. In the prepared checkout, run `bash scripts/start_demo.sh`. The clone example below applies after publication.
+
+Requires Python 3.12 or 3.13, internet access for initial dependencies/model downloads, and several GB of disk space for the Python environment and model cache. An Apple Silicon Mac or a modern CPU machine can run the demo. The small generator prioritizes accessible local execution over answer quality.
 
 ```bash
 git clone https://github.com/raghavpamnani/incidentlens-week3.git
@@ -40,7 +42,11 @@ uvicorn incidentlens.main:app --host 127.0.0.1 --port 8030
 
 Open **http://127.0.0.1:8030**. API documentation is at **/docs**. First generation loads the local LLM and is slower than subsequent queries. Use one server worker: embedded Qdrant owns a filesystem lock.
 
-The full setup enables **Docling**, **Presidio with spaCy NER**, and **Qwen2.5-0.5B-Instruct**. The checked-in `.env.example` describes available settings. Existing `.env` files are preserved.
+After setup, `bash scripts/start_demo.sh` starts the app with offline model loading.
+
+The full setup installs the validated dependency snapshot in `requirements.lock`. Cold startup and the first answer can take longer on machines with limited memory.
+
+The full setup enables **Docling**, **Presidio with spaCy NER**, and **Qwen2.5-0.5B-Instruct**. The checked-in `.env.example` describes available settings. Existing `.env` files are preserved. The 0.5B model is the prepared profile for this 8 GB Mac. On a machine with more memory, set `IL_LOCAL_LLM_MODEL=Qwen/Qwen2.5-1.5B-Instruct` and rerun the answer evaluations.
 
 ### Lightweight / evidence-only profile
 
@@ -89,7 +95,7 @@ HyDE optionally generates a hypothetical retrieval passage; it is never treated 
 | Keyword retrieval | BM25 with identifiers preserved as tokens |
 | Fusion | Reciprocal rank fusion, k=60 |
 | Reranking | `cross-encoder/ms-marco-MiniLM-L-6-v2`, local CPU inference |
-| Generation | Qwen2.5-0.5B-Instruct via Transformers; optional Ollama |
+| Generation | Qwen2.5-0.5B-Instruct via Transformers; optional larger Qwen / Ollama |
 | PDF parsing | Docling full profile, OCR disabled for the supplied text PDF; explicit pdfplumber profile |
 | Knowledge graph | NetworkX MultiDiGraph; explicit `depends on` / `is owned by` sentences |
 | PII & secrets | Presidio + spaCy NER in full profile; custom email and API-key recognizers |
@@ -137,7 +143,7 @@ incidentlens/
   static/           # Responsive interface without external JS
 corpus/             # Fictional sample documents only
 scripts/            # Setup, indexing, evaluation, sample PDF generation
- tests/             # Automated unit and API boundary checks
+tests/             # Automated unit and API boundary checks
 ```
 
 ## Scope and honesty
@@ -153,6 +159,7 @@ The source documents deliberately include fictional PII, a fake API key, and a m
 - [API contracts and curl examples](docs/API.md)
 - [Security behavior and limitations](docs/SECURITY.md)
 - [Evaluation methodology](docs/EVALUATION.md)
+- [Verified local run and answer review](docs/VALIDATION.md)
 - [Requirement-to-evidence checklist](docs/SUBMISSION.md)
 
 Built by [Rahul Pamnani](https://github.com/raghavpamnani) as a separate AI Bootcamp Week 3 project.

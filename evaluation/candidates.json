@@ -1,0 +1,27 @@
+{
+  "review_required": true,
+  "generator": "transformers",
+  "questions": [
+    {
+      "question": "What are the recovery targets for payment timeouts?",
+      "expected_answer": "Below 1%",
+      "source_ids": [
+        "2ff2870148280878ec97d309"
+      ]
+    },
+    {
+      "question": "What does the AUTH-401 status code indicate?",
+      "expected_answer": "An access token is expired or has an invalid issuer.",
+      "source_ids": [
+        "07aa9e243d7690028415a4e2"
+      ]
+    },
+    {
+      "question": "What are the symptoms of database connection acquisition timeout in the Payments API?",
+      "expected_answer": "The Symptoms include a timeout error when attempting to acquire a database connection.",
+      "source_ids": [
+        "75b99741d4348a2309ad8726"
+      ]
+    }
+  ]
+}

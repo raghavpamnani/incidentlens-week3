@@ -92,7 +92,11 @@ class Guardrails:
             for r in results
             if not (
                 r.entity_type == "PERSON"
-                and any(start <= r.start and r.end <= end for start, end in public_spans)
+                and (
+                    any(start <= r.start and r.end <= end for start, end in public_spans)
+                    or text[r.start : r.end].strip(" \n\t|").lower()
+                    in {term.lower() for term in PUBLIC_DOMAIN_TERMS}
+                )
             )
         ]
         counts = Counter(r.entity_type for r in results)

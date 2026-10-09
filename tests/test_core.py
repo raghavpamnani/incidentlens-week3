@@ -146,9 +146,109 @@ def test_generated_citations_must_exist(monkeypatch):
         generator.answer("Payments issue?", [Hit(chunk=chunk(), score=1)])
 
 
+def test_invented_service_name_is_rejected(monkeypatch):
+    generator = Generator(Settings(generator="transformers"))
+    monkeypatch.setattr(
+        generator,
+        "_chat",
+        lambda *args: json.dumps(
+            {"claims": [{"text": "Payment Gateway API caused the issue.", "citations": ["E1"]}]}
+        ),
+    )
+    with pytest.raises(ValueError, match="absent from cited evidence"):
+        generator.answer("Checkout?", [Hit(chunk=chunk(), score=1)])
+
+
 def test_evidence_mode_is_extractively_grounded():
     generator = Generator(Settings(generator="evidence"))
     hit = Hit(chunk=chunk(), score=1)
     answer = generator.answer("Checkout?", [hit])
     assert answer.claims[0].text in hit.chunk.text
     assert answer.claims[0].citations == ["c1"]
+
+
+def test_local_answer_aliases_resolve_to_real_sources(monkeypatch):
+    generator = Generator(Settings(generator="transformers"))
+    monkeypatch.setattr(
+        generator,
+        "_chat",
+        lambda *args: (
+            "```json\n"
+            + json.dumps(
+                {
+                    "claims": [
+                        {"text": "Checkout Service depends on Payments API.", "citations": ["E1"]}
+                    ]
+                }
+            )
+            + "\n```"
+        ),
+    )
+    answer = generator.answer("Checkout?", [Hit(chunk=chunk(), score=1)])
+    assert answer.claims[0].citations == ["c1"]
+
+
+def test_claim_array_envelope_retains_citation_validation(monkeypatch):
+    generator = Generator(Settings(generator="transformers"))
+    monkeypatch.setattr(
+        generator,
+        "_chat",
+        lambda *args: '[{"text":"Checkout depends on Payments.","citations":["E1"]}]',
+    )
+    answer = generator.answer("Checkout?", [Hit(chunk=chunk(), score=1)])
+    assert answer.claims[0].citations == ["c1"]
+
+
+def test_format_retry_is_bounded_and_validates_citations(monkeypatch):
+    generator = Generator(Settings(generator="transformers"))
+    outputs = iter(["not JSON", '{"claims":[{"text":"Supported finding","citations":["E1"]}]}'])
+    calls = []
+
+    def respond(*args):
+        calls.append(args)
+        return next(outputs)
+
+    monkeypatch.setattr(generator, "_chat", respond)
+    answer = generator.answer("Checkout?", [Hit(chunk=chunk(), score=1)])
+    assert len(calls) == 2
+    assert answer.claims[0].citations == ["c1"]
+
+
+def test_invalid_answer_shape_is_not_silently_repaired(monkeypatch):
+    generator = Generator(Settings(generator="transformers"))
+    monkeypatch.setattr(generator, "_chat", lambda *args: '[{"answer":"invented"}]')
+    with pytest.raises(ValidationError):
+        generator.answer("Checkout?", [Hit(chunk=chunk(), score=1)])
+
+
+def test_retrieval_metrics_deduplicate_documents():
+    from incidentlens.evaluation import retrieval_metrics
+
+    metrics = retrieval_metrics(["noise.md", "good.md", "good.md"], ["good.md", "missing.md"])
+    assert metrics == {"precision": 0.5, "recall": 0.5, "mrr": 0.5}
+
+
+def test_judge_schema_rejects_unbounded_scores():
+    from incidentlens.evaluation import JudgeRubric
+
+    with pytest.raises(ValidationError):
+        JudgeRubric(faithfulness=6, completeness=4, relevance=3, rationale="invalid scale")
+
+
+def test_hyde_requires_a_generative_profile():
+    with pytest.raises(ValueError, match="local LLM"):
+        Generator(Settings(generator="evidence")).hyde("Why is checkout failing?")
+
+
+def test_table_header_ner_false_positive_is_preserved(guard, monkeypatch):
+    from presidio_analyzer import RecognizerResult
+
+    text = "Metric        | Recovery target"
+    monkeypatch.setattr(
+        guard.analyzer,
+        "analyze",
+        lambda **kwargs: [RecognizerResult(entity_type="PERSON", start=0, end=15, score=0.9)],
+    )
+    clean, findings = guard.redact(text)
+    assert clean == text
+    assert findings == []

@@ -3,6 +3,7 @@ import re
 import threading
 from pathlib import Path
 
+import httpx
 from fastapi import APIRouter, HTTPException, Request, UploadFile
 
 from incidentlens.config import ROOT
@@ -37,7 +38,7 @@ def investigate(body: SearchRequest, request: Request):
             return request.app.state.pipeline.investigate(body)
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from exc
-        except (RuntimeError, OSError):
+        except (RuntimeError, OSError, httpx.HTTPError):
             raise HTTPException(503, "Local index or model is unavailable. Check setup.") from None
 
 

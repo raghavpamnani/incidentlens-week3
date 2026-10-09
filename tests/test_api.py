@@ -83,3 +83,10 @@ def test_rate_limit(client):
         res = client.post("/api/investigate", json={"query": "x"})
         assert res.status_code == 422
     assert client.post("/api/investigate", json={"query": "x"}).status_code == 429
+
+
+def test_malformed_content_length_is_rejected(client):
+    response = client.post(
+        "/api/investigate", json={"query": "hello"}, headers={"content-length": "invalid"}
+    )
+    assert response.status_code == 400

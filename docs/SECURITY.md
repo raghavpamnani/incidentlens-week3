@@ -21,3 +21,7 @@ A generated answer with existing citations can still be unsupported. The NLI eva
 The application is a localhost demo. Before deploying: add authentication and access controls, per-document permissions, isolated parsing workers, request/compute timeouts, robust resource quotas, dependency review, operational audit logs and stronger adversarial tests. Do not expose Uvicorn on 0.0.0.0.
 
 Original uploaded files are stored locally, unsanitized; only indexed content is redacted. Use synthetic documents. The sample corpus intentionally includes fake test PII/secrets. Real private/client data must not be committed.
+
+Malformed JSON or claim structure receives at most one model formatting retry. Every resulting claim and citation is validated again; unknown citations fail immediately, and a second invalid response remains an explicit failure. The retry does not substitute canned answers.
+
+Capitalized API, Service, Database and Team references in generated claims must appear in the cited passages. This limited consistency check rejects invented names; it does not verify causal relationships or all possible entity spellings.

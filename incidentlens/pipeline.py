@@ -34,8 +34,9 @@ class Pipeline:
                 chunk.text, findings = self.guard.redact(chunk.text)
                 self.ingestion_findings.extend(findings)
                 safe.append(chunk)
-        self.graph = KnowledgeGraph(safe)
+        graph = KnowledgeGraph(safe)
         self.retriever.index(safe)
+        self.graph = graph
 
     def load(self):
         self.retriever.load()
@@ -82,6 +83,9 @@ class Pipeline:
             "auth-401",
             "inc-204",
             "pool",
+            "payment",
+            "recovery",
+            "connection",
             "rollback",
             "token",
         }

@@ -34,3 +34,7 @@ The harness checks direct injection, secret requests, the limited content policy
 ## Synthetic candidates
 
 `python scripts/generate_eval.py` uses the local LLM to create schema-validated candidate Q&A with source IDs. Output is explicitly pending review. Candidate answers must be checked against passages before merging into ground truth. The reviewed benchmark is kept independent of these candidates.
+
+The local generator permits one bounded formatting retry for invalid JSON or claim structure. End-to-end answer latency includes that retry when needed. The saved larger-model run is retained separately in `evaluation/larger-model-results.json`. Candidate Q&A uses one passage per model call, with source provenance assigned from that supplied passage; candidates remain pending review.
+
+The development labels were authored and checked against the synthetic documents during this assistant-built project. They have not received independent expert review. User review is recommended before treating them as a durable ground-truth dataset.

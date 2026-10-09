@@ -10,11 +10,11 @@ Run full setup, build the index, run evaluation with answers, then start the ser
 
 ## 0:15–0:45 — Investigation
 
-Click Checkout timeout. Explain exact error-code matching and semantic retrieval. Open one answer citation. Show the source document, section and page when available. Note that INC-204 is historical evidence, not proof of a new root cause.
+Click Checkout timeout. The opening question asks what PAY-504 means and what to check first. Explain exact error-code matching and semantic retrieval. Open one answer citation. Show the source document, section and page when available. Note that INC-204 is historical evidence, not proof of a new root cause.
 
 ## 0:45–1:05 — Evidence and graph
 
-Open the Evidence Inspector: vector rank, keyword rank, fused initial rank and reranker score. Show the related path Checkout Service → Payments API → Ledger Database / Payments Team. Click a relationship source to verify its sentence.
+Open the Evidence Inspector: vector rank, keyword rank, fused initial rank and reranker score. Open Knowledge map and show the path Checkout Service → Payments API → Ledger Database / Payments Team. Click a relationship source to verify its sentence.
 
 ## 1:05–1:25 — Guardrails
 

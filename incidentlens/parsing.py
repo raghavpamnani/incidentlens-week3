@@ -9,9 +9,18 @@ from incidentlens.models import Chunk
 def read_pages(path: Path, pdf_parser: str = "pdfplumber") -> list[tuple[int | None, str, str]]:
     if path.suffix.lower() == ".pdf":
         if pdf_parser == "docling":
-            from docling.document_converter import DocumentConverter
+            from docling.datamodel.base_models import InputFormat
+            from docling.datamodel.pipeline_options import PdfPipelineOptions
+            from docling.document_converter import DocumentConverter, PdfFormatOption
 
-            doc = DocumentConverter().convert(path).document
+            options = PdfPipelineOptions(do_ocr=False)
+            doc = (
+                DocumentConverter(
+                    format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=options)}
+                )
+                .convert(path)
+                .document
+            )
             return [(i, doc.export_to_markdown(page_no=i), "docling") for i in sorted(doc.pages)]
         import pdfplumber
 

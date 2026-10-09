@@ -22,7 +22,7 @@ The graph extracts only explicit domain sentences: `A depends on B.` and `A is o
 
 ## Generation boundary
 
-The local Transformers profile uses Qwen2.5-0.5B-Instruct (MPS when available, CPU otherwise). Ollama is a configurable alternative. Both generate typed JSON claims with citations. Pydantic validates the structure; cited IDs must belong to the retrieved context. Output passes through redaction and policy checks. Neither JSON validity nor citation existence guarantees faithfulness.
+The local Transformers profile uses Qwen2.5-0.5B-Instruct in full setup (MPS when available, CPU otherwise); a 1.5B model is optional on machines with more memory. Ollama is a configurable alternative. Both generate typed JSON claims with citations. Pydantic validates the structure; cited IDs must belong to the retrieved context. Output passes through redaction and policy checks. Neither JSON validity nor citation existence guarantees faithfulness.
 
 The separate `evidence` profile returns source excerpts and is labeled as extractive. It is not an automatic fallback for failed LLM answers. Generation failures return a visible status and still expose safe retrieved evidence.
 
@@ -36,3 +36,5 @@ Abstention requires overlap with the indexed domain and, in reranked mode, a pos
 - Raw query contents are not logged by the application; Uvicorn access logs contain paths and status codes.
 - Optional Llama Guard uses a local Ollama endpoint and fails closed on unavailable/invalid verdicts.
 - Original bootcamp PDFs, CV, private files and credentials are outside this standalone repository.
+
+Malformed JSON or claim structure receives at most one model formatting retry. Every resulting claim and citation is validated again; unknown citations fail immediately, and a second invalid response remains an explicit failure. The retry does not substitute canned answers.

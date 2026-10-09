@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 class Chunk(BaseModel):
@@ -48,7 +48,9 @@ class GraphEdge(BaseModel):
 
 class AnswerClaim(BaseModel):
     text: str = Field(min_length=1, max_length=1200)
-    citations: list[str] = Field(min_length=1, max_length=8)
+    citations: list[str] = Field(
+        min_length=1, max_length=8, validation_alias=AliasChoices("citations", "citation")
+    )
 
 
 class GeneratedAnswer(BaseModel):
