@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     ollama_url: str = "http://127.0.0.1:11434"
     ollama_model: str = "qwen3:4b"
     generator: str = "evidence"
+    local_llm_model: str = "Qwen/Qwen2.5-0.5B-Instruct"
     pdf_parser: str = "pdfplumber"
     pii_ner: bool = False
     llama_guard_model: str = ""
