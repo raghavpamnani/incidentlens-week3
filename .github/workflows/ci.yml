@@ -1,5 +1,5 @@
 name: Validate IncidentLens
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 jobs:
   unit-and-api:
     runs-on: ubuntu-latest
