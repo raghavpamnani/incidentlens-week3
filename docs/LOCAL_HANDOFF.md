@@ -31,3 +31,9 @@ The prepared Python environment and active model cache are in `~/Library/Caches/
 The intended repository name is `raghavpamnani/incidentlens-week3`. Public publication requires user approval. No repository was created after automatic approval review rejected that action. The README clone URL is the intended destination for publication, not evidence that it already exists.
 
 Record the two-minute video using `docs/DEMO_SCRIPT.md`, then submit the public repository and recording through the official bootcamp process. No video or assignment-form submission has been made.
+
+## Local Git storage
+
+Git metadata is kept in `~/Library/Application Support/IncidentLens/git`, reached through the standard `.git` gitdir pointer in this folder. This avoids the Documents-folder mmap timeouts encountered during finalization. Original metadata is preserved under ignored `data/git-metadata-backup`. All recovered objects were hash-verified and `git fsck --full` completed successfully.
+
+`main` and `codex/incidentlens-foundation` preserve the genuine implementation commits. A separate `IncidentLens-history.bundle` is supplied beside the source archive for a portable history backup. To clone that bundle, run `git clone IncidentLens-history.bundle incidentlens-restored` and then follow the README setup instructions. The source ZIP excludes runtime files and Git metadata.
