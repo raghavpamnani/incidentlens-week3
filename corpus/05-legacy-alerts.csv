@@ -1,0 +1,4 @@
+code,service,symptom,first_check
+PAY-504,Payments API,Database connection acquisition timeout,Check pool wait and active connections
+INV-409,Inventory API,Stock reservation conflict,Check reservation expiry
+AUTH-401,Identity Service,Expired access token,Check token expiry and issuer
